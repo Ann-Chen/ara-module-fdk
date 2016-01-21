@@ -42,7 +42,7 @@
 #include <nuttx/util.h>
 
 #include <arch/tsb/csi.h>
-
+#include "CameraCapability.h"
 /* OV5645 I2C port and address */
 #define OV5645_I2C_PORT                 0
 #define OV5645_I2C_ADDR                 0x3c
@@ -1036,12 +1036,13 @@ static int ov5645_configure(struct sensor_info *info,
 static int camera_op_capabilities(struct device *dev, uint32_t *size,
                                   uint8_t *capabilities)
 {
+
     /* init capabilities [Fill in fake value]*/
     capabilities[0] = CAP_METADATA_GREYBUS;
     capabilities[0] |= CAP_METADATA_MIPI;
     capabilities[0] |= CAP_STILL_IMAGE;
     capabilities[0] |= CAP_JPEG;
-
+    
     *size = sizeof(uint32_t);
     return 0;
 }
@@ -1084,7 +1085,7 @@ static int camera_op_set_streams_cfg(struct device *dev, uint8_t *num_streams,
     const struct ov5645_mode_info *cfg;
     uint8_t i;
     int ret;
-
+ 
     /*
      * When unconfiguring the module we can uninit CSI-RX right away as the
      * sensor is already stopped, and then power the sensor off.
@@ -1151,7 +1152,9 @@ static int camera_op_set_streams_cfg(struct device *dev, uint8_t *num_streams,
 
     /* Initialize the CSI receiver. */
     csi_rx_init(info->cdsidev, NULL);
-
+   
+  
+    
     return 0;
 }
 
@@ -1406,6 +1409,15 @@ void ara_module_early_init(void)
 
 void ara_module_init(void)
 {
+	uint32_t *size1;
+    int ret = 0;
+    uint8_t *capabilities1;
     device_table_register(&camera_device_table);
     device_register_driver(&camera_driver);
+
+    capabilities1 = zalloc(sizeof(struct camera_metadata_package) 
+        + MAX_METADATA_NUMBER * sizeof(struct camera_metadata_entry)
+        + MAX_METADATA_NUMBER * MAX_METADATA_SIZE);
+    ret = getCapabilities(size1, capabilities1);
+ 	free(capabilities1);
 }
