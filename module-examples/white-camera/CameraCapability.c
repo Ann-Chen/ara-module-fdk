@@ -44,37 +44,47 @@ int getCapabilities(uint32_t *size, uint8_t *cap)
 
 	//init
 	pMetaData = zalloc(sizeof(struct camera_metadata_package));
-	memset(pMetaData, 0, sizeof(struct camera_metadata_package));
-	pMetaData->header.version = ARA_METADATA_VERSION;
+	if(NULL == pMetaData) 
+	    return ERROR;
+
 	pMetaData->entries = zalloc(MAX_METADATA_NUMBER * sizeof(struct camera_metadata_entry));
-	memset(pMetaData->entries, 0, MAX_METADATA_NUMBER * sizeof(struct camera_metadata_entry));
-	pMetaData->data = zalloc(MAX_METADATA_NUMBER * MAX_METADATA_SIZE); //need to modify it 
-	memset(pMetaData->data, 0, MAX_METADATA_NUMBER * MAX_METADATA_SIZE);
+	if(NULL == pMetaData->entries) {
+        free(pMetaData);
+        return ERROR;
+    }  	
 	
+	pMetaData->data = zalloc(MAX_METADATA_NUMBER * MAX_METADATA_SIZE); //need to modify it 
+	if(NULL == pMetaData->data ) {
+        free(pMetaData);
+        free(pMetaData->entries);
+        return ERROR;
+    }
+	pMetaData->header.version = ARA_METADATA_VERSION;
+		
 	//CONTROL_AE_AVAILABLE_ANTIBANDING_MODES
     static const uint8_t availableAntibandingModes[] = {
-			ANDROID_CONTROL_AE_ANTIBANDING_MODE_OFF,
-			ANDROID_CONTROL_AE_ANTIBANDING_MODE_50HZ,
-			ANDROID_CONTROL_AE_ANTIBANDING_MODE_60HZ,
-			ANDROID_CONTROL_AE_ANTIBANDING_MODE_AUTO
+        ANDROID_CONTROL_AE_ANTIBANDING_MODE_OFF,
+        ANDROID_CONTROL_AE_ANTIBANDING_MODE_50HZ,
+        ANDROID_CONTROL_AE_ANTIBANDING_MODE_60HZ,
+        ANDROID_CONTROL_AE_ANTIBANDING_MODE_AUTO
     };
     updateMetadata(pMetaData,TYPE_BYTE, CONTROL_AE_AVAILABLE_ANTIBANDING_MODES,
 	    sizeof(availableAntibandingModes), availableAntibandingModes);
 
     //CONTROL_AE_AVAILABLE_MODES
     static const uint8_t availableAeModes[] = {
-            ANDROID_CONTROL_AE_MODE_OFF,
-            ANDROID_CONTROL_AE_MODE_ON,
-			ANDROID_CONTROL_AE_MODE_ON_AUTO_FLASH,
-            ANDROID_CONTROL_AE_MODE_ON_ALWAYS_FLASH,
-            ANDROID_CONTROL_AE_MODE_ON_AUTO_FLASH_REDEYE
+        ANDROID_CONTROL_AE_MODE_OFF,
+        ANDROID_CONTROL_AE_MODE_ON,
+        ANDROID_CONTROL_AE_MODE_ON_AUTO_FLASH,
+        ANDROID_CONTROL_AE_MODE_ON_ALWAYS_FLASH,
+        ANDROID_CONTROL_AE_MODE_ON_AUTO_FLASH_REDEYE
     };
     updateMetadata(pMetaData,TYPE_BYTE, CONTROL_AE_AVAILABLE_MODES,
 	    sizeof(availableAeModes), availableAeModes);
 
     //CONTROL_AE_AVAILABLE_TARGET_FPS_RANGES
     static const int32_t availableTargetFpsRanges[] = {
-            5, 30, 15, 30
+        5, 30, 15, 30
     };
     updateMetadata(pMetaData,TYPE_INT32,
 		CONTROL_AE_AVAILABLE_TARGET_FPS_RANGES, sizeof(availableTargetFpsRanges), (uint8_t *)availableTargetFpsRanges);
@@ -91,59 +101,59 @@ int getCapabilities(uint32_t *size, uint8_t *cap)
 
     //CONTROL_AF_AVAILABLE_MODES
     static const uint8_t availableAfModesBack[] = {
-            ANDROID_CONTROL_AF_MODE_OFF,
-            ANDROID_CONTROL_AF_MODE_AUTO,
-            ANDROID_CONTROL_AF_MODE_MACRO,
-            ANDROID_CONTROL_AF_MODE_CONTINUOUS_VIDEO,
-            ANDROID_CONTROL_AF_MODE_CONTINUOUS_PICTURE
+        ANDROID_CONTROL_AF_MODE_OFF,
+        ANDROID_CONTROL_AF_MODE_AUTO,
+        ANDROID_CONTROL_AF_MODE_MACRO,
+        ANDROID_CONTROL_AF_MODE_CONTINUOUS_VIDEO,
+        ANDROID_CONTROL_AF_MODE_CONTINUOUS_PICTURE
     };
     updateMetadata(pMetaData,TYPE_BYTE,
 		CONTROL_AF_AVAILABLE_MODES, sizeof(availableAfModesBack), availableAfModesBack);
 
     //CONTROL_AVAILABLE_SCENE_MODES
     static const uint8_t availableSceneModes[] = {
-		    ANDROID_CONTROL_SCENE_MODE_DISABLED,
-			ANDROID_CONTROL_SCENE_MODE_FACE_PRIORITY,
-			ANDROID_CONTROL_SCENE_MODE_ACTION,
-			ANDROID_CONTROL_SCENE_MODE_PORTRAIT,
-			ANDROID_CONTROL_SCENE_MODE_LANDSCAPE,
-			ANDROID_CONTROL_SCENE_MODE_NIGHT,
-			ANDROID_CONTROL_SCENE_MODE_NIGHT_PORTRAIT,
-			ANDROID_CONTROL_SCENE_MODE_THEATRE,
-			ANDROID_CONTROL_SCENE_MODE_BEACH,
-			ANDROID_CONTROL_SCENE_MODE_SNOW,
-			ANDROID_CONTROL_SCENE_MODE_SUNSET,
-			ANDROID_CONTROL_SCENE_MODE_STEADYPHOTO,
-			ANDROID_CONTROL_SCENE_MODE_FIREWORKS,
-			ANDROID_CONTROL_SCENE_MODE_SPORTS,
-			ANDROID_CONTROL_SCENE_MODE_PARTY,
-			ANDROID_CONTROL_SCENE_MODE_CANDLELIGHT,
-			ANDROID_CONTROL_SCENE_MODE_BARCODE,
-			ANDROID_CONTROL_SCENE_MODE_HIGH_SPEED_VIDEO,
-			ANDROID_CONTROL_SCENE_MODE_HDR
+        ANDROID_CONTROL_SCENE_MODE_DISABLED,
+        ANDROID_CONTROL_SCENE_MODE_FACE_PRIORITY,
+        ANDROID_CONTROL_SCENE_MODE_ACTION,
+        ANDROID_CONTROL_SCENE_MODE_PORTRAIT,
+        ANDROID_CONTROL_SCENE_MODE_LANDSCAPE,
+        ANDROID_CONTROL_SCENE_MODE_NIGHT,
+        ANDROID_CONTROL_SCENE_MODE_NIGHT_PORTRAIT,
+        ANDROID_CONTROL_SCENE_MODE_THEATRE,
+        ANDROID_CONTROL_SCENE_MODE_BEACH,
+        ANDROID_CONTROL_SCENE_MODE_SNOW,
+        ANDROID_CONTROL_SCENE_MODE_SUNSET,
+        ANDROID_CONTROL_SCENE_MODE_STEADYPHOTO,
+        ANDROID_CONTROL_SCENE_MODE_FIREWORKS,
+        ANDROID_CONTROL_SCENE_MODE_SPORTS,
+        ANDROID_CONTROL_SCENE_MODE_PARTY,
+        ANDROID_CONTROL_SCENE_MODE_CANDLELIGHT,
+        ANDROID_CONTROL_SCENE_MODE_BARCODE,
+        ANDROID_CONTROL_SCENE_MODE_HIGH_SPEED_VIDEO,
+        ANDROID_CONTROL_SCENE_MODE_HDR
     };
     updateMetadata(pMetaData,TYPE_BYTE,
-		CONTROL_AVAILABLE_SCENE_MODES, sizeof(availableSceneModes), availableSceneModes);
+        CONTROL_AVAILABLE_SCENE_MODES, sizeof(availableSceneModes), availableSceneModes);
 
     //CONTROL_AVAILABLE_VIDEO_STABILIZATION_MODES
     static const uint8_t availableVstabModes[] = {
-            ANDROID_CONTROL_VIDEO_STABILIZATION_MODE_OFF,
-			ANDROID_CONTROL_VIDEO_STABILIZATION_MODE_ON	
+        ANDROID_CONTROL_VIDEO_STABILIZATION_MODE_OFF,
+        ANDROID_CONTROL_VIDEO_STABILIZATION_MODE_ON	
     };
     updateMetadata(pMetaData,TYPE_BYTE,
 		CONTROL_AVAILABLE_VIDEO_STABILIZATION_MODES, sizeof(availableVstabModes), availableVstabModes);
 
 	//CONTROL_AWB_AVAILABLE_MODES
 	static const uint8_t availableAwbModes[] = {
-			ANDROID_CONTROL_AWB_MODE_OFF,
-			ANDROID_CONTROL_AWB_MODE_AUTO,
-			ANDROID_CONTROL_AWB_MODE_INCANDESCENT,
-			ANDROID_CONTROL_AWB_MODE_FLUORESCENT,
-			ANDROID_CONTROL_AWB_MODE_WARM_FLUORESCENT,
-			ANDROID_CONTROL_AWB_MODE_DAYLIGHT,
-			ANDROID_CONTROL_AWB_MODE_CLOUDY_DAYLIGHT,
-			ANDROID_CONTROL_AWB_MODE_TWILIGHT,
-			ANDROID_CONTROL_AWB_MODE_SHADE,
+        ANDROID_CONTROL_AWB_MODE_OFF,
+        ANDROID_CONTROL_AWB_MODE_AUTO,
+        ANDROID_CONTROL_AWB_MODE_INCANDESCENT,
+        ANDROID_CONTROL_AWB_MODE_FLUORESCENT,
+        ANDROID_CONTROL_AWB_MODE_WARM_FLUORESCENT,
+        ANDROID_CONTROL_AWB_MODE_DAYLIGHT,
+        ANDROID_CONTROL_AWB_MODE_CLOUDY_DAYLIGHT,
+        ANDROID_CONTROL_AWB_MODE_TWILIGHT,
+        ANDROID_CONTROL_AWB_MODE_SHADE,
     };
     updateMetadata(pMetaData,TYPE_BYTE,
 		CONTROL_AWB_AVAILABLE_MODES, sizeof(availableAwbModes), availableAwbModes);
@@ -164,9 +174,9 @@ int getCapabilities(uint32_t *size, uint8_t *cap)
 	// android.jpeg
 	//JPEG_AVAILABLE_THUMBNAIL_SIZES
     static const int32_t jpegThumbnailSizes[] = {
-            0, 0,
-            160, 120,
-            320, 240
+        0, 0,
+        160, 120,
+        320, 240
      };
 	updateMetadata(pMetaData,TYPE_INT32,
 		JPEG_AVAILABLE_THUMBNAIL_SIZES, sizeof(jpegThumbnailSizes), jpegThumbnailSizes);
@@ -178,9 +188,9 @@ int getCapabilities(uint32_t *size, uint8_t *cap)
 
     //REQUEST_MAX_NUM_OUTPUT_STREAMS
     static const int32_t max_output_streams[] = {
-            MAX_STALLING_STREAMS,
-            MAX_PROCESSED_STREAMS,
-            MAX_RAW_STREAMS
+        MAX_STALLING_STREAMS,
+        MAX_PROCESSED_STREAMS,
+        MAX_RAW_STREAMS
     };
 	updateMetadata(pMetaData,TYPE_INT32,
 		REQUEST_MAX_NUM_OUTPUT_STREAMS, sizeof(max_output_streams), max_output_streams);
@@ -191,13 +201,13 @@ int getCapabilities(uint32_t *size, uint8_t *cap)
 	
 	//SCALER_AVAILABLE_FORMATS
 	static const int32_t scalar_formats[] = {
-			ANDROID_SCALER_AVAILABLE_FORMATS_RAW16,
-			ANDROID_SCALER_AVAILABLE_FORMATS_RAW_OPAQUE,
-			ANDROID_SCALER_AVAILABLE_FORMATS_YV12,
-			ANDROID_SCALER_AVAILABLE_FORMATS_YCrCb_420_SP,
-			ANDROID_SCALER_AVAILABLE_FORMATS_IMPLEMENTATION_DEFINED,
-			ANDROID_SCALER_AVAILABLE_FORMATS_YCbCr_420_888,
-			ANDROID_SCALER_AVAILABLE_FORMATS_BLOB
+        ANDROID_SCALER_AVAILABLE_FORMATS_RAW16,
+        ANDROID_SCALER_AVAILABLE_FORMATS_RAW_OPAQUE,
+        ANDROID_SCALER_AVAILABLE_FORMATS_YV12,
+        ANDROID_SCALER_AVAILABLE_FORMATS_YCrCb_420_SP,
+        ANDROID_SCALER_AVAILABLE_FORMATS_IMPLEMENTATION_DEFINED,
+        ANDROID_SCALER_AVAILABLE_FORMATS_YCbCr_420_888,
+        ANDROID_SCALER_AVAILABLE_FORMATS_BLOB
 	};
     updateMetadata(pMetaData,TYPE_INT32,
 		SCALER_AVAILABLE_FORMATS, sizeof(scalar_formats), scalar_formats);
@@ -225,39 +235,33 @@ int getCapabilities(uint32_t *size, uint8_t *cap)
 	//SENSOR_INFO_PIXEL_ARRAY_SIZE
 	static const int32_t Resolution[]  =  {640, 480};
      updateMetadata(pMetaData,TYPE_INT32,
-		SENSOR_INFO_PIXEL_ARRAY_SIZE, sizeof(Resolution), Resolution);		
+		SENSOR_INFO_PIXEL_ARRAY_SIZE, sizeof(Resolution), Resolution);	
 
     //STATISTICS_INFO_MAX_FACE_COUNT
     static const int32_t maxFaceCount = 8;
     updateMetadata(pMetaData,TYPE_INT32,
-		STATISTICS_INFO_MAX_FACE_COUNT, sizeof(maxFaceCount), &maxFaceCount);									
+		STATISTICS_INFO_MAX_FACE_COUNT, sizeof(maxFaceCount), &maxFaceCount);
 
     //Do the Data Copy
     memcpy(cap, &pMetaData->header, sizeof(struct camera_metadata_header));
 	buffercount = sizeof(struct camera_metadata_header);
 	pMetaData->header.entry_start = buffercount;
 	cap += buffercount;
-    printf("cap =0x %x\n", cap);	
-    printf("header buffercount =%d\n", buffercount);
         
 	for (index = 0; index < pMetaData->header.entry_count; index++) {
 		memcpy(cap, &pMetaData->entries[index], sizeof(struct camera_metadata_entry));
 		buffercount += sizeof(struct camera_metadata_entry);
 	    cap += sizeof(struct camera_metadata_entry);
-	    printf("cap =0x %x\n", cap);	
-        printf("entry buffercount =%d\n", buffercount);
 	}
     
 	pMetaData->header.metadata_data_start = buffercount;
-	printf("pMetaData->header.size =%d\n", pMetaData->header.size);
 	memcpy(cap, &pMetaData->data[0], pMetaData->header.size);
 
 	buffercount += pMetaData->header.size; //total size of metadata package size
-	printf("total buffercount =%d\n", buffercount);
 	pMetaData->header.size = buffercount;
     *size = buffercount;
     pMetaData->header.metadata_data_count = pMetaData->header.entry_count;
-    
+    /*
     printf("=========================== \n");    
     printf("pMetaData->header.version = %d\n", pMetaData->header.version);
     printf("pMetaData->header.size = %d\n", pMetaData->header.size);
@@ -265,11 +269,12 @@ int getCapabilities(uint32_t *size, uint8_t *cap)
     printf("pMetaData->header.entry_start = %d\n", pMetaData->header.entry_start);    
     printf("pMetaData->header.metadata_data_count = %d\n", pMetaData->header.metadata_data_count);
     printf("pMetaData->header.metadata_data_start = %d\n", pMetaData->header.metadata_data_start); 
-    
+    */
+	//Copy header, entries and metadata to one buffer
 	free(pMetaData->data);
 	free(pMetaData->entries);
 	free(pMetaData);
-    return 0;
+    return OK;
 }
 
 int getDefaultRequestSettings(int32_t *size, uint8_t *cap)
@@ -279,17 +284,27 @@ int getDefaultRequestSettings(int32_t *size, uint8_t *cap)
 
 	//init
 	pMetaData = zalloc(sizeof(struct camera_metadata_package));
-	memset(pMetaData, 0, sizeof(struct camera_metadata_package));
-	pMetaData->header.version = ARA_METADATA_VERSION;
+	if(NULL == pMetaData) 
+	    return ERROR;
+
 	pMetaData->entries = zalloc(MAX_METADATA_NUMBER * sizeof(struct camera_metadata_entry));
-	memset(pMetaData->entries, 0, MAX_METADATA_NUMBER * sizeof(struct camera_metadata_entry));
-	pMetaData->data = zalloc(MAX_METADATA_NUMBER * MAX_METADATA_SIZE); //need to modify it
-	memset(pMetaData->data, 0, MAX_METADATA_NUMBER * MAX_METADATA_SIZE);
+	if(NULL == pMetaData->entries) {
+        free(pMetaData);
+        return ERROR;
+    }  	
+	
+	pMetaData->data = zalloc(MAX_METADATA_NUMBER * MAX_METADATA_SIZE); //need to modify it 
+	if(NULL == pMetaData->data ) {
+        free(pMetaData);
+        free(pMetaData->entries);
+        return ERROR;
+    }
+	pMetaData->header.version = ARA_METADATA_VERSION;
 
     //android.control
     //CONTROL_AE_ANTIBANDING_MODE
     static const uint8_t aeAntibandingMode =
-            ANDROID_CONTROL_AE_ANTIBANDING_MODE_AUTO;
+        ANDROID_CONTROL_AE_ANTIBANDING_MODE_AUTO;
     updateMetadata(pMetaData,TYPE_BYTE,
 		CONTROL_AE_ANTIBANDING_MODE, sizeof(aeAntibandingMode), &aeAntibandingMode);
 
@@ -341,7 +356,7 @@ int getDefaultRequestSettings(int32_t *size, uint8_t *cap)
 
     //CONTROL_AWB_MODE
     static const uint8_t awbMode =
-            ANDROID_CONTROL_AWB_MODE_AUTO;
+        ANDROID_CONTROL_AWB_MODE_AUTO;
     updateMetadata(pMetaData,TYPE_BYTE,
 		CONTROL_AWB_MODE, sizeof(awbMode), &awbMode);
 
@@ -452,70 +467,54 @@ int getDefaultRequestSettings(int32_t *size, uint8_t *cap)
 		memcpy(cap, &pMetaData->entries[index], sizeof(struct camera_metadata_entry));
 		buffercount += sizeof(struct camera_metadata_entry);
 	    cap += sizeof(struct camera_metadata_entry);
-	    printf("cap =0x %x\n", cap);
-        printf("entry buffercount =%d\n", buffercount);
 	}
 
 	pMetaData->header.metadata_data_start = buffercount;
-	printf("pMetaData->header.size =%d\n", pMetaData->header.size);
 	memcpy(cap, &pMetaData->data[0], pMetaData->header.size);
 
 	buffercount += pMetaData->header.size; //total size of metadata package size
-	printf("total buffercount =%d\n", buffercount);
 	pMetaData->header.size = buffercount;
     *size = buffercount;
     pMetaData->header.metadata_data_count = pMetaData->header.entry_count;
 
-    printf("=========================== \n");
+/*    printf("=========================== \n");
     printf("pMetaData->header.version = %d\n", pMetaData->header.version);
     printf("pMetaData->header.size = %d\n", pMetaData->header.size);
     printf("pMetaData->header.entry_count = %d\n", pMetaData->header.entry_count);
     printf("pMetaData->header.entry_start = %d\n", pMetaData->header.entry_start);
     printf("pMetaData->header.metadata_data_count = %d\n", pMetaData->header.metadata_data_count);
     printf("pMetaData->header.metadata_data_start = %d\n", pMetaData->header.metadata_data_start);
-
+*/
 	//Copy header, entries and metadata to one buffer
 	free(pMetaData->data);
 	free(pMetaData->entries);
 	free(pMetaData);
-    return 0;
+    return OK;
 }
 
-int updateMetadata(struct camera_metadata_package *pData, uint8_t type, 
-    uint8_t KeyiD, int size, const uint8_t *values)
+
+int updateMetadata(struct camera_metadata_package *pData, uint8_t type,
+    Camera_Metadata_type_t KeyiD, int size, const uint8_t *values)
 {
     int nEntry = 0,addr_offset=0;
+
+    if(pData->header.entry_count >= MAX_METADATA_NUMBER) {
+    	//printf("%s, Memory is not enough\n"__func__);
+        return ERROR;
+	}
 	nEntry = pData->header.entry_count;
-	
-	printf("=========================== \n");
-	printf("pData->header.size = 0x%x\n", pData->header.size);    
-	printf("pData->header.entry_count = 0x%x\n", pData->header.entry_count); 
     pData->entries[nEntry].entry_tag = KeyiD;
 	pData->entries[nEntry].data_type = type;
 	pData->entries[nEntry].data_count = size;
-  
+
     memcpy(&pData->data[pData->header.size], (void *)values, size);
-    printf("pData->data[0] = 0x%x\n", pData->data[pData->header.size]);
-    printf("pData->data[1] = 0x%x\n", pData->data[pData->header.size+1]);
-    printf("pData->data[2] = 0x%x\n", pData->data[pData->header.size+2]);
-    printf("pData->data[3] = 0x%x\n", pData->data[pData->header.size+3]);
-    printf("pData->data[4] = 0x%x\n", pData->data[pData->header.size+4]);
-    printf("pData->data[5] = 0x%x\n", pData->data[pData->header.size+5]);
-    
-	if((size%ALGINMENT_BITS) != 0)
-	    addr_offset +=  (ALGINMENT_BITS-(size%ALGINMENT_BITS)); //address alignment
+
+    //address alignment
+    if((size % ALGINMENT_BITS) != 0)
+	    addr_offset +=  (ALGINMENT_BITS-(size % ALGINMENT_BITS));
     pData->header.size += size + addr_offset;
- 	pData->entries[nEntry].data_offset = pData->header.size;
+    pData->entries[nEntry].data_offset = pData->header.size;
 
-	printf("size = %d\n", size); 
-	printf("values %d\n", values[0]); 
-	printf("pData->data = 0x%x\n", pData->data); 
-	printf("addr_offset = %d\n", addr_offset);  
-	printf("pData->entries[nEntry].data_offset = %d\n", pData->entries[nEntry].data_offset);  
-	printf("=========================== \n"); 
-		
-	if(pData->header.entry_count < MAX_METADATA_NUMBER)
-		pData->header.entry_count++;  //error handle
-	return 0;	
+    pData->header.entry_count++;
+    return OK;
 }
-

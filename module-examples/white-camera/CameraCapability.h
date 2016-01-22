@@ -17,18 +17,14 @@
 #define FDK_CAMERACAPABILITY_C
 
 /** Versioning information */
-#define ARA_METADATA_VERSION  1
-#define MAX_METADATA_NUMBER   30
-#define MAX_METADATA_SIZE     20
-#define ALGINMENT_BITS        4
-#define MAX_RAW_STREAMS       1
-#define MAX_STALLING_STREAMS  1
-#define MAX_PROCESSED_STREAMS 3
-
-int getCapabilities(uint32_t *size, uint8_t *cap);
-
-int updateMetadata(struct camera_metadata_package *pData, uint8_t type,
-    uint8_t KeyiD, int size, const uint8_t *values);
+#define ARA_METADATA_VERSION 1
+#define MAX_METADATA_NUMBER  30
+#define MAX_METADATA_SIZE    20
+#define ALGINMENT_BITS       8
+#define MAX_RAW_STREAMS        1
+#define MAX_STALLING_STREAMS   1
+#define MAX_PROCESSED_STREAMS  3
+//#define ALIGNMENT8(X) (((X+(8-1))/8)*8)
 
 enum {
     // Unsigned 8-bit integer (uint8_t)
@@ -52,9 +48,9 @@ struct camera_metadata_header {
     uint16_t    version;
 	uint16_t    size;
     uint16_t    entry_count;
-    uint16_t    entry_start;
+    uint16_t    entry_start; 
     uint16_t    metadata_data_count;
-    uint16_t    metadata_data_start;
+    uint16_t    metadata_data_start; 
 };
 
 struct camera_metadata_entry {
@@ -69,6 +65,24 @@ struct camera_metadata_package {
 	struct camera_metadata_entry	*entries;
 	uint8_t				    		*data;
 };
+
+/*
+//Memory format (entries and data interleaved)
+struct camera_metadata_header {
+    uint32_t          version[2];
+	uint32_t          size[2];
+    uint32_t          entry_count[2];
+};
+
+struct camera_metadata_entry {
+    uint32_t          entry_tag[2];
+	uint32_t          data_size;
+    uint32_t          data_offset;
+    uint32_t          *data;//sizeof(data_type)*data_count
+};
+*/
+
+
 
 typedef enum {
 	CONTROL_AE_ANTIBANDING_MODE = 0x05,
@@ -109,7 +123,7 @@ typedef enum {
 	JPEG_AVAILABLE_THUMBNAIL_SIZES = 0x3E,
 	
 	LENS_INFO_AVAILABLE_FOCAL_LENGTHS = 0x43,
-	//LENS_FOCAL_LENGTH = 0x43, // ?? need to solve this
+	//LENS_FOCAL_LENGTH = 0x43, // ??
 	LENS_FOCUS_DISTANCE = 0x44,
 
 	LENS_FOCUS_RANGE = 0x49,
@@ -653,4 +667,8 @@ typedef enum camera_metadata_enum_android_depth_depth_is_exclusive {
 
 
 
+int getCapabilities(uint32_t *size, uint8_t *cap);
+
+int updateMetadata(struct camera_metadata_package *pData, uint8_t type, 
+    Camera_Metadata_type_t KeyiD, int size, const uint8_t *values);
 #endif
