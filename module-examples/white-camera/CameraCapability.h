@@ -17,14 +17,13 @@
 #define FDK_CAMERACAPABILITY_C
 
 /** Versioning information */
-#define ARA_METADATA_VERSION 1
-#define MAX_METADATA_NUMBER  30
-#define MAX_METADATA_SIZE    20
-#define ALGINMENT_BITS       8
+#define ARA_METADATA_VERSION   1
+#define MAX_METADATA_NUMBER    30
+#define MAX_METADATA_SIZE      20
 #define MAX_RAW_STREAMS        1
 #define MAX_STALLING_STREAMS   1
 #define MAX_PROCESSED_STREAMS  3
-//#define ALIGNMENT8(X) (((X+(8-1))/8)*8)
+#define ALIGNMENT(size, align) ((((int)size+(align-1))/align)*align) 
 
 enum {
     // Unsigned 8-bit integer (uint8_t)

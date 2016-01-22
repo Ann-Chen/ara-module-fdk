@@ -496,7 +496,7 @@ int getDefaultRequestSettings(int32_t *size, uint8_t *cap)
 int updateMetadata(struct camera_metadata_package *pData, uint8_t type,
     Camera_Metadata_type_t KeyiD, int size, const uint8_t *values)
 {
-    int nEntry = 0,addr_offset=0;
+    int nEntry = 0;
 
     if(pData->header.entry_count >= MAX_METADATA_NUMBER) {
     	//printf("%s, Memory is not enough\n"__func__);
@@ -510,9 +510,8 @@ int updateMetadata(struct camera_metadata_package *pData, uint8_t type,
     memcpy(&pData->data[pData->header.size], (void *)values, size);
 
     //address alignment
-    if((size % ALGINMENT_BITS) != 0)
-	    addr_offset +=  (ALGINMENT_BITS-(size % ALGINMENT_BITS));
-    pData->header.size += size + addr_offset;
+    pData->header.size += size;
+    pData->header.size = ALIGNMENT(pData->header.size, 8);
     pData->entries[nEntry].data_offset = pData->header.size;
 
     pData->header.entry_count++;
