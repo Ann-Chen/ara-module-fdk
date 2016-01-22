@@ -92,7 +92,7 @@ int getCapabilities(uint32_t *size, uint8_t *cap)
     //CONTROL_AE_COMPENSATION_STEP
 	static const int32_t exposureCompensationRange[] = {-9, 9};
     updateMetadata(pMetaData,TYPE_INT32,
-		CONTROL_AE_COMPENSATION_RANGE, sizeof(exposureCompensationRange), exposureCompensationRange);
+		CONTROL_AE_COMPENSATION_RANGE, sizeof(exposureCompensationRange), (uint8_t *)exposureCompensationRange);
 
     //CONTROL_AE_COMPENSATION_STEP
     /*static const camera_metadata_rational exposureCompensationStep = {1, 3};
@@ -161,7 +161,7 @@ int getCapabilities(uint32_t *size, uint8_t *cap)
     //CONTROL_MAX_REGIONS
     static const int32_t max3aRegions[] = {/*AE*/ 0,/*AWB*/ 0,/*AF*/ 0};
     updateMetadata(pMetaData,TYPE_BYTE,
-		CONTROL_MAX_REGIONS, sizeof(max3aRegions), max3aRegions);
+		CONTROL_MAX_REGIONS, sizeof(max3aRegions), (uint8_t *)max3aRegions);
 
     //CONTROL_SCENE_MODES_OVERRIDES
     //Need to implement
@@ -179,12 +179,12 @@ int getCapabilities(uint32_t *size, uint8_t *cap)
         320, 240
      };
 	updateMetadata(pMetaData,TYPE_INT32,
-		JPEG_AVAILABLE_THUMBNAIL_SIZES, sizeof(jpegThumbnailSizes), jpegThumbnailSizes);
+		JPEG_AVAILABLE_THUMBNAIL_SIZES, sizeof(jpegThumbnailSizes), (uint8_t *)jpegThumbnailSizes);
 
 	//LENS_INFO_AVAILABLE_FOCAL_LENGTHS
 	static const float focalLength = 3.30f; // mm
 	updateMetadata(pMetaData,TYPE_FLOAT,
-		LENS_INFO_AVAILABLE_FOCAL_LENGTHS, sizeof(focalLength), &focalLength);    
+		LENS_INFO_AVAILABLE_FOCAL_LENGTHS, sizeof(focalLength), (uint8_t *)&focalLength);    
 
     //REQUEST_MAX_NUM_OUTPUT_STREAMS
     static const int32_t max_output_streams[] = {
@@ -193,7 +193,7 @@ int getCapabilities(uint32_t *size, uint8_t *cap)
         MAX_RAW_STREAMS
     };
 	updateMetadata(pMetaData,TYPE_INT32,
-		REQUEST_MAX_NUM_OUTPUT_STREAMS, sizeof(max_output_streams), max_output_streams);
+		REQUEST_MAX_NUM_OUTPUT_STREAMS, sizeof(max_output_streams), (uint8_t *)max_output_streams);
 
     //REQUEST_AVAILABLE_REQUEST_KEYS = 0x68,
 	//REQUEST_AVALIABLE_RESULT_KEYS,
@@ -210,37 +210,37 @@ int getCapabilities(uint32_t *size, uint8_t *cap)
         ANDROID_SCALER_AVAILABLE_FORMATS_BLOB
 	};
     updateMetadata(pMetaData,TYPE_INT32,
-		SCALER_AVAILABLE_FORMATS, sizeof(scalar_formats), scalar_formats);
+		SCALER_AVAILABLE_FORMATS, sizeof(scalar_formats), (uint8_t *)scalar_formats);
 		
     //SCALER_AVAILABLE_MAX_DIGITAL_ZOOM
 	static const float maxZoom = 10;
     updateMetadata(pMetaData,TYPE_FLOAT,
-		SCALER_AVAILABLE_MAX_DIGITAL_ZOOM, sizeof(maxZoom), &maxZoom);
+		SCALER_AVAILABLE_MAX_DIGITAL_ZOOM, sizeof(maxZoom), (uint8_t *)&maxZoom);
 			
     //SENSOR_ORIENTATION
 	static const int32_t orientation = 0; // unrotated (0 degrees)
     updateMetadata(pMetaData,TYPE_INT32,
-		SENSOR_ORIENTATION, sizeof(orientation), &orientation);
+		SENSOR_ORIENTATION, sizeof(orientation), (uint8_t *)&orientation);
 
     //SENSOR_INFO_SENSITIVITY_RANGE
 	static const int32_t SensitivityRange[2] = {100, 1600};
     updateMetadata(pMetaData,TYPE_INT32,
-		SENSOR_INFO_SENSITIVITY_RANGE, sizeof(SensitivityRange), SensitivityRange);
+		SENSOR_INFO_SENSITIVITY_RANGE, sizeof(SensitivityRange), (uint8_t *)SensitivityRange);
 	
 	//SENSOR_INFO_PHYSICAL_SIZE
     static const float sensorPhysicalSize[2] = {3.20f, 2.40f}; // mm
     updateMetadata(pMetaData,TYPE_FLOAT,
-		SENSOR_INFO_PHYSICAL_SIZE, sizeof(sensorPhysicalSize), sensorPhysicalSize);
+		SENSOR_INFO_PHYSICAL_SIZE, sizeof(sensorPhysicalSize), (uint8_t *)sensorPhysicalSize);
 	
 	//SENSOR_INFO_PIXEL_ARRAY_SIZE
 	static const int32_t Resolution[]  =  {640, 480};
      updateMetadata(pMetaData,TYPE_INT32,
-		SENSOR_INFO_PIXEL_ARRAY_SIZE, sizeof(Resolution), Resolution);	
+		SENSOR_INFO_PIXEL_ARRAY_SIZE, sizeof(Resolution), (uint8_t *)Resolution);	
 
     //STATISTICS_INFO_MAX_FACE_COUNT
     static const int32_t maxFaceCount = 8;
     updateMetadata(pMetaData,TYPE_INT32,
-		STATISTICS_INFO_MAX_FACE_COUNT, sizeof(maxFaceCount), &maxFaceCount);
+		STATISTICS_INFO_MAX_FACE_COUNT, sizeof(maxFaceCount), (uint8_t *)&maxFaceCount);
 
     //Do the Data Copy
     memcpy(cap, &pMetaData->header, sizeof(struct camera_metadata_header));
@@ -311,7 +311,7 @@ int getDefaultRequestSettings(int32_t *size, uint8_t *cap)
     //CONTROL_AE_EXPOSURE_COMPENSATION
     static const int32_t aeExpCompensation = 0;
     updateMetadata(pMetaData,TYPE_INT32,
-		CONTROL_AE_EXPOSURE_COMPENSATION, sizeof(aeExpCompensation), &aeExpCompensation);
+		CONTROL_AE_EXPOSURE_COMPENSATION, sizeof(aeExpCompensation), (uint8_t *)&aeExpCompensation);
 
     //CONTROL_AE_LOCK
 	static const uint8_t aeLock = ANDROID_CONTROL_AE_LOCK_OFF;
@@ -329,14 +329,14 @@ int getDefaultRequestSettings(int32_t *size, uint8_t *cap)
         0, 0, 640, 480, 1000
     };
     updateMetadata(pMetaData,TYPE_INT32,
-		CONTROL_AE_REGIONS, sizeof(controlRegions), controlRegions);
+		CONTROL_AE_REGIONS, sizeof(controlRegions), (uint8_t *)controlRegions);
 
     //CONTROL_AE_TARGET_FPS_RANGE
     static const int32_t aeTargetFpsRange[2] = {
         10, 30
     };
     updateMetadata(pMetaData,TYPE_INT32,
-		CONTROL_AE_TARGET_FPS_RANGE, sizeof(aeTargetFpsRange), aeTargetFpsRange);
+		CONTROL_AE_TARGET_FPS_RANGE, sizeof(aeTargetFpsRange), (uint8_t *)aeTargetFpsRange);
 
 	//CONTROL_AE_PRECAPTURE_TRIGGER,
 
@@ -347,7 +347,7 @@ int getDefaultRequestSettings(int32_t *size, uint8_t *cap)
 
     //CONTROL_AF_REGIONS
     updateMetadata(pMetaData,TYPE_INT32,
-		CONTROL_AF_REGIONS, sizeof(controlRegions), controlRegions);
+		CONTROL_AF_REGIONS, sizeof(controlRegions), (uint8_t *)controlRegions);
 
     //CONTROL_AWB_LOCK
     static const uint8_t awbLock = ANDROID_CONTROL_AWB_LOCK_OFF;
@@ -362,7 +362,7 @@ int getDefaultRequestSettings(int32_t *size, uint8_t *cap)
 
     //CONTROL_AWB_REGIONS
     updateMetadata(pMetaData,TYPE_INT32,
-		CONTROL_AWB_REGIONS, sizeof(controlRegions), controlRegions);
+		CONTROL_AWB_REGIONS, sizeof(controlRegions), (uint8_t *)controlRegions);
 
     //CONTROL_CAPTURE_INTENT
     uint8_t controlIntent = ANDROID_CONTROL_CAPTURE_INTENT_PREVIEW;
@@ -420,7 +420,7 @@ int getDefaultRequestSettings(int32_t *size, uint8_t *cap)
     //JPEG_ORIENTATION
     static const int32_t jpegOrientation = 0;
     updateMetadata(pMetaData,TYPE_INT32,
-		JPEG_ORIENTATION, sizeof(jpegOrientation), &jpegOrientation);
+		JPEG_ORIENTATION, sizeof(jpegOrientation), (uint8_t *)&jpegOrientation);
 
     //JPEG_QUALITY
     static const uint8_t jpegQuality = 80;
@@ -432,13 +432,13 @@ int getDefaultRequestSettings(int32_t *size, uint8_t *cap)
         640, 480
     };
     updateMetadata(pMetaData,TYPE_INT32,
-		JPEG_THUMBNAIL_SIZE, sizeof(thumbnailSize), thumbnailSize);
+		JPEG_THUMBNAIL_SIZE, sizeof(thumbnailSize), (uint8_t *)thumbnailSize);
 
     // android.lens 
     //LENS_FOCUS_DISTANCE  
     static const float focusDistance = 0;
     updateMetadata(pMetaData,TYPE_FLOAT,
-		LENS_FOCUS_DISTANCE, sizeof(focusDistance), &focusDistance);
+		LENS_FOCUS_DISTANCE, sizeof(focusDistance), (uint8_t *)&focusDistance);
 
     // android.scaler
     //SCALER_CROP_REGION
