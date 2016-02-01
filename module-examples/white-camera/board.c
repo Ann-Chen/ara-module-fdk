@@ -1036,13 +1036,13 @@ static int ov5645_configure(struct sensor_info *info,
 static int camera_op_capabilities(struct device *dev, uint32_t *size,
                                   uint8_t *capabilities)
 {
-    /* init capabilities [Fill in fake value]*/
-    capabilities[0] = CAP_METADATA_GREYBUS;
-    capabilities[0] |= CAP_METADATA_MIPI;
-    capabilities[0] |= CAP_STILL_IMAGE;
-    capabilities[0] |= CAP_JPEG;
-    
-    *size = sizeof(uint32_t);
+	int ret;
+    ret = getCapabilities(size, capabilities);
+    if (ret != OK) {
+        printf("ov5645: failed to get capabilities\n", __func__);
+        return -EIO;
+    }
+
     return 0;
 }
 
@@ -1057,7 +1057,7 @@ static int camera_op_get_required_size(struct device *dev, uint8_t operation,
 {
     switch (operation) {
     case SIZE_CAPABILITIES:
-        *size = 16;
+        *size = 420;
         return 0;
     default:
         return -EINVAL;
