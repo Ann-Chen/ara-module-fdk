@@ -1042,7 +1042,7 @@ static int camera_op_capabilities(struct device *dev, uint32_t *size,
         printf("ov5645: failed to get capabilities\n", __func__);
         return -EIO;
     }
-
+    
     return 0;
 }
 
@@ -1057,7 +1057,7 @@ static int camera_op_get_required_size(struct device *dev, uint8_t operation,
 {
     switch (operation) {
     case SIZE_CAPABILITIES:
-        *size = 420;
+        *size = 436;
         return 0;
     default:
         return -EINVAL;
@@ -1084,7 +1084,7 @@ static int camera_op_set_streams_cfg(struct device *dev, uint8_t *num_streams,
     const struct ov5645_mode_info *cfg;
     uint8_t i;
     int ret;
- 
+
     /*
      * When unconfiguring the module we can uninit CSI-RX right away as the
      * sensor is already stopped, and then power the sensor off.
@@ -1151,9 +1151,7 @@ static int camera_op_set_streams_cfg(struct device *dev, uint8_t *num_streams,
 
     /* Initialize the CSI receiver. */
     csi_rx_init(info->cdsidev, NULL);
-   
-  
-    
+
     return 0;
 }
 
