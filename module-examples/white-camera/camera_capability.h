@@ -30,13 +30,16 @@
 #define FDK_CAMERACAPABILITY_C
 
 /* Versioning information */
-#define ARA_METADATA_VERSION   1
-#define MAX_METADATA_NUMBER    30
-#define MAX_METADATA_SIZE      20
-#define MAX_RAW_STREAMS        1
-#define MAX_STALLING_STREAMS   1
-#define MAX_PROCESSED_STREAMS  3
-#define ALIGNMENT(size, align) ((((int)size+(align-1))/align)*align)
+#define ARA_METADATA_VERSION        1
+#define MAX_METADATA_NUMBER         25
+#define MAX_METADATA_SIZE           20
+#define MAX_RAW_STREAMS             1
+#define MAX_STALLING_STREAMS        1
+#define MAX_PROCESSED_STREAMS       3
+#define ALIGNMENT(size, align) \
+        ((((int)size + (align - 1)) / align) * align)
+#define SIZE_CAPABILITIES_VALUE     436
+#define SIZE_CAPTURE_SETTINGS_VALUE 412
 
 enum {
     /* Unsigned 8-bit integer (uint8_t) */
@@ -637,30 +640,30 @@ typedef enum camera_metadata_enum_android_depth_depth_is_exclusive {
 
 /**
  * @brief Camera sensor Capabilities
- * @param buffer size
- * @param buffer address
- * @return OK for success or ERROR on any faillure
+ * @param size buffer size
+ * @param capabilities buffer address
+ * @return zero for success or non-zero on any faillure
  */
-int getCapabilities(uint32_t *size, uint8_t *cap);
+int get_capabilities(uint32_t *size, uint8_t *capabilities);
 
 /**
- * @brief Camera sensor capture
- * @param buffer size
- * @param buffer address
- * @return OK for success or ERROR on any faillure
+ * @brief Camera sensor capture settings
+ * @param size buffer size
+ * @param capabilities buffer address
+ * @return zero for success or non-zero on any faillure
  */
-int getDefaultRequestSettings(int32_t *size, uint8_t *cap);
+int get_capture_request_settings(uint8_t *capabilities);
 
 /**
  * @brief update metadata to buffer
- * @param Pointer to structure of metadata data
- * @param metadata type
- * @param metadata Key ID
- * @param metadata size
- * @param matadata value
- * @return  OK for success or ERROR on any faillure
+ * @param data Pointer to structure of metadata data
+ * @param type metadata type
+ * @param keyid metadata Key ID
+ * @param size metadata size
+ * @param values matadata value
+ * @return zero for success or non-zero on any faillure
  */
-int updateMetadata(struct camera_metadata_package *pData, uint8_t type,
-    Camera_Metadata_type_t KeyiD, int size, const uint8_t *values);
+int update_metadata(struct camera_metadata_package *data, uint8_t type,
+    Camera_Metadata_type_t keyid, int size, const uint8_t *values);
 
 #endif

@@ -42,7 +42,7 @@
 #include <nuttx/util.h>
 
 #include <arch/tsb/csi.h>
-#include "CameraCapability.h"
+#include "camera_capability.h"
 /* OV5645 I2C port and address */
 #define OV5645_I2C_PORT                 0
 #define OV5645_I2C_ADDR                 0x3c
@@ -962,7 +962,7 @@ static int ov5645_write_array(struct i2c_dev_s *dev,
 
 static int ov5645_set_stream(struct sensor_info *info, bool on)
 {
-    return ov5645_write(info->cam_i2c, REG_STREAM_ONOFF, on ? 0x00 : 0xff);
+    return ov5645_write(info->cam_i2c, REG_STREAM_ONOFF, on ? 0x00 : 0x0f);
 }
 
 /**
@@ -1036,13 +1036,13 @@ static int ov5645_configure(struct sensor_info *info,
 static int camera_op_capabilities(struct device *dev, uint32_t *size,
                                   uint8_t *capabilities)
 {
-	int ret;
-    ret = getCapabilities(size, capabilities);
-    if (ret != OK) {
+    int ret;
+    ret = get_capabilities(size, capabilities);
+    if (ret) {
         printf("ov5645: failed to get capabilities\n", __func__);
         return -EIO;
     }
-    
+
     return 0;
 }
 
@@ -1057,11 +1057,15 @@ static int camera_op_get_required_size(struct device *dev, uint8_t operation,
 {
     switch (operation) {
     case SIZE_CAPABILITIES:
-        *size = 436;
-        return 0;
+        *size = SIZE_CAPABILITIES_VALUE;
+        break;
+    case SIZE_CAPTURE_SETTINGS:
+        *size = SIZE_CAPTURE_SETTINGS_VALUE;
+        break;
     default:
         return -EINVAL;
     }
+    return 0;
 }
 
 /**
@@ -1182,6 +1186,13 @@ static int camera_op_capture(struct device *dev, struct capture_info *capt_info)
     }
 
     info->req_id = capt_info->request_id;
+
+    /* get the capture setting */
+    ret = get_capture_request_settings(capt_info->settings);
+    if (ret) {
+        printf("ov5645: failed to get capture setting\n", __func__);
+        return -EIO;
+    }
 
     return ret;
 }
