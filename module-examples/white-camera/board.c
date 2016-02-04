@@ -1059,8 +1059,8 @@ static int camera_op_get_required_size(struct device *dev, uint8_t operation,
     case SIZE_CAPABILITIES:
         *size = SIZE_CAPABILITIES_VALUE;
         break;
-    case SIZE_CAPTURE_SETTINGS:
-        *size = SIZE_CAPTURE_SETTINGS_VALUE;
+    case SIZE_CAPTURE_RESULTS_METADATA:
+        *size = SIZE_CAPTURE_RESULTS_METADATA_VALUE;
         break;
     default:
         return -EINVAL;
@@ -1186,13 +1186,6 @@ static int camera_op_capture(struct device *dev, struct capture_info *capt_info)
     }
 
     info->req_id = capt_info->request_id;
-
-    /* get the capture setting */
-    ret = get_capture_request_settings(capt_info->settings);
-    if (ret) {
-        printf("ov5645: failed to get capture setting\n", __func__);
-        return -EIO;
-    }
 
     return ret;
 }

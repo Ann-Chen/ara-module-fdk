@@ -34,7 +34,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <nuttx/kmalloc.h>
-#include "CameraCapability.h"
+#include "camera_capability.h"
 
 /**
  * @brief Camera sensor Capabilities
@@ -49,83 +49,83 @@ int get_capabilities(uint32_t *size, uint8_t *capabilities)
     int index = 0, buffercount = 0, ret;
 
     const uint8_t availableAntibandingModes[] = {
-        ANDROID_CONTROL_AE_ANTIBANDING_MODE_OFF,
-        ANDROID_CONTROL_AE_ANTIBANDING_MODE_50HZ,
-        ANDROID_CONTROL_AE_ANTIBANDING_MODE_60HZ,
-        ANDROID_CONTROL_AE_ANTIBANDING_MODE_AUTO
+        CONTROL_AE_ANTIBANDING_MODE_OFF,
+        CONTROL_AE_ANTIBANDING_MODE_50HZ,
+        CONTROL_AE_ANTIBANDING_MODE_60HZ,
+        CONTROL_AE_ANTIBANDING_MODE_AUTO
     };
     const uint8_t availableAeModes[] = {
-        ANDROID_CONTROL_AE_MODE_OFF,
-        ANDROID_CONTROL_AE_MODE_ON,
-        ANDROID_CONTROL_AE_MODE_ON_AUTO_FLASH,
-        ANDROID_CONTROL_AE_MODE_ON_ALWAYS_FLASH,
-        ANDROID_CONTROL_AE_MODE_ON_AUTO_FLASH_REDEYE
+        CONTROL_AE_MODE_OFF,
+        CONTROL_AE_MODE_ON,
+        CONTROL_AE_MODE_ON_AUTO_FLASH,
+        CONTROL_AE_MODE_ON_ALWAYS_FLASH,
+        CONTROL_AE_MODE_ON_AUTO_FLASH_REDEYE
     };
     const int32_t availableTargetFpsRanges[] = {5, 30, 15, 30};
     const int32_t exposureCompensationRange[] = {-9, 9};
     const camera_metadata_rational_t exposureCompensationStep = {1, 3};
     const uint8_t availableAfModesBack[] = {
-        ANDROID_CONTROL_AF_MODE_OFF,
-        ANDROID_CONTROL_AF_MODE_AUTO,
-        ANDROID_CONTROL_AF_MODE_MACRO,
-        ANDROID_CONTROL_AF_MODE_CONTINUOUS_VIDEO,
-        ANDROID_CONTROL_AF_MODE_CONTINUOUS_PICTURE
+        CONTROL_AF_MODE_OFF,
+        CONTROL_AF_MODE_AUTO,
+        CONTROL_AF_MODE_MACRO,
+        CONTROL_AF_MODE_CONTINUOUS_VIDEO,
+        CONTROL_AF_MODE_CONTINUOUS_PICTURE
     };
     const uint8_t availableSceneModes[] = {
-        ANDROID_CONTROL_SCENE_MODE_DISABLED,
-        ANDROID_CONTROL_SCENE_MODE_FACE_PRIORITY,
-        ANDROID_CONTROL_SCENE_MODE_ACTION,
-        ANDROID_CONTROL_SCENE_MODE_PORTRAIT,
-        ANDROID_CONTROL_SCENE_MODE_LANDSCAPE,
-        ANDROID_CONTROL_SCENE_MODE_NIGHT,
-        ANDROID_CONTROL_SCENE_MODE_NIGHT_PORTRAIT,
-        ANDROID_CONTROL_SCENE_MODE_THEATRE,
-        ANDROID_CONTROL_SCENE_MODE_BEACH,
-        ANDROID_CONTROL_SCENE_MODE_SNOW,
-        ANDROID_CONTROL_SCENE_MODE_SUNSET,
-        ANDROID_CONTROL_SCENE_MODE_STEADYPHOTO,
-        ANDROID_CONTROL_SCENE_MODE_FIREWORKS,
-        ANDROID_CONTROL_SCENE_MODE_SPORTS,
-        ANDROID_CONTROL_SCENE_MODE_PARTY,
-        ANDROID_CONTROL_SCENE_MODE_CANDLELIGHT,
-        ANDROID_CONTROL_SCENE_MODE_BARCODE,
-        ANDROID_CONTROL_SCENE_MODE_HIGH_SPEED_VIDEO,
-        ANDROID_CONTROL_SCENE_MODE_HDR
+        CONTROL_SCENE_MODE_DISABLED,
+        CONTROL_SCENE_MODE_FACE_PRIORITY,
+        CONTROL_SCENE_MODE_ACTION,
+        CONTROL_SCENE_MODE_PORTRAIT,
+        CONTROL_SCENE_MODE_LANDSCAPE,
+        CONTROL_SCENE_MODE_NIGHT,
+        CONTROL_SCENE_MODE_NIGHT_PORTRAIT,
+        CONTROL_SCENE_MODE_THEATRE,
+        CONTROL_SCENE_MODE_BEACH,
+        CONTROL_SCENE_MODE_SNOW,
+        CONTROL_SCENE_MODE_SUNSET,
+        CONTROL_SCENE_MODE_STEADYPHOTO,
+        CONTROL_SCENE_MODE_FIREWORKS,
+        CONTROL_SCENE_MODE_SPORTS,
+        CONTROL_SCENE_MODE_PARTY,
+        CONTROL_SCENE_MODE_CANDLELIGHT,
+        CONTROL_SCENE_MODE_BARCODE,
+        CONTROL_SCENE_MODE_HIGH_SPEED_VIDEO,
+        CONTROL_SCENE_MODE_HDR
     };
     const uint8_t availableVstabModes[] = {
-        ANDROID_CONTROL_VIDEO_STABILIZATION_MODE_OFF,
-        ANDROID_CONTROL_VIDEO_STABILIZATION_MODE_ON
+        CONTROL_VIDEO_STABILIZATION_MODE_OFF,
+        CONTROL_VIDEO_STABILIZATION_MODE_ON
     };
     const uint8_t availableAwbModes[] = {
-        ANDROID_CONTROL_AWB_MODE_OFF,
-        ANDROID_CONTROL_AWB_MODE_AUTO,
-        ANDROID_CONTROL_AWB_MODE_INCANDESCENT,
-        ANDROID_CONTROL_AWB_MODE_FLUORESCENT,
-        ANDROID_CONTROL_AWB_MODE_WARM_FLUORESCENT,
-        ANDROID_CONTROL_AWB_MODE_DAYLIGHT,
-        ANDROID_CONTROL_AWB_MODE_CLOUDY_DAYLIGHT,
-        ANDROID_CONTROL_AWB_MODE_TWILIGHT,
-        ANDROID_CONTROL_AWB_MODE_SHADE,
+        CONTROL_AWB_MODE_OFF,
+        CONTROL_AWB_MODE_AUTO,
+        CONTROL_AWB_MODE_INCANDESCENT,
+        CONTROL_AWB_MODE_FLUORESCENT,
+        CONTROL_AWB_MODE_WARM_FLUORESCENT,
+        CONTROL_AWB_MODE_DAYLIGHT,
+        CONTROL_AWB_MODE_CLOUDY_DAYLIGHT,
+        CONTROL_AWB_MODE_TWILIGHT,
+        CONTROL_AWB_MODE_SHADE,
     };
     const int32_t max3aRegions[] = {0, 0, 0};
-    const uint8_t flashAvailable = ANDROID_FLASH_INFO_AVAILABLE_FALSE;
+    const uint8_t flashAvailable = FLASH_INFO_AVAILABLE_FALSE;
     const int32_t jpegThumbnailSizes[] = {0, 0, 160, 120, 320, 240};
-    const float focalLength = 3.30f;
+    const float focalLength = 2.50f;
     const int32_t max_output_streams[] = {
         MAX_STALLING_STREAMS,
         MAX_PROCESSED_STREAMS,
         MAX_RAW_STREAMS
     };
     const int32_t scalar_formats[] = {
-        ANDROID_SCALER_AVAILABLE_FORMATS_RAW16,
-        ANDROID_SCALER_AVAILABLE_FORMATS_RAW_OPAQUE,
-        ANDROID_SCALER_AVAILABLE_FORMATS_YV12,
-        ANDROID_SCALER_AVAILABLE_FORMATS_YCrCb_420_SP,
-        ANDROID_SCALER_AVAILABLE_FORMATS_IMPLEMENTATION_DEFINED,
-        ANDROID_SCALER_AVAILABLE_FORMATS_YCbCr_420_888,
-        ANDROID_SCALER_AVAILABLE_FORMATS_BLOB
+        SCALER_AVAILABLE_FORMATS_RAW16,
+        SCALER_AVAILABLE_FORMATS_RAW_OPAQUE,
+        SCALER_AVAILABLE_FORMATS_YV12,
+        SCALER_AVAILABLE_FORMATS_YCrCb_420_SP,
+        SCALER_AVAILABLE_FORMATS_IMPLEMENTATION_DEFINED,
+        SCALER_AVAILABLE_FORMATS_YCbCr_420_888,
+        SCALER_AVAILABLE_FORMATS_BLOB
     };
-    const float maxZoom = 10;
+    const float maxZoom = 10.0f;
     const int32_t orientation = 0;
     const int32_t SensitivityRange[2] = {100, 1600};
     const float sensorPhysicalSize[2] = {3.20f, 2.40f};
@@ -141,16 +141,13 @@ int get_capabilities(uint32_t *size, uint8_t *capabilities)
     metadata_ptr->entries = zalloc(MAX_METADATA_NUMBER *
                                    sizeof(struct camera_metadata_entry));
     if (!metadata_ptr->entries) {
-        free(metadata_ptr);
-        return -ENOMEM;
+        goto err_free_metadata_ptr;
     }
 
     /* need to modify it */
     metadata_ptr->data = zalloc(MAX_METADATA_NUMBER * MAX_METADATA_SIZE);
     if (!metadata_ptr->data ) {
-        free(metadata_ptr);
-        free(metadata_ptr->entries);
-        return -ENOMEM;
+        goto err_free_metadata;
     }
     metadata_ptr->header.version = ARA_METADATA_VERSION;
 
@@ -160,14 +157,14 @@ int get_capabilities(uint32_t *size, uint8_t *capabilities)
                           sizeof(availableAntibandingModes),
                           availableAntibandingModes);
     if (ret) {
-        return ret;
+        goto err_free_all;
     }
 
     /* CONTROL_AE_AVAILABLE_MODES */
     ret = update_metadata(metadata_ptr, TYPE_BYTE, CONTROL_AE_AVAILABLE_MODES,
                           sizeof(availableAeModes), availableAeModes);
     if (ret) {
-        return ret;
+        goto err_free_all;
     }
 
     /* CONTROL_AE_AVAILABLE_TARGET_FPS_RANGES */
@@ -176,7 +173,7 @@ int get_capabilities(uint32_t *size, uint8_t *capabilities)
                           sizeof(availableTargetFpsRanges),
                           (uint8_t *)availableTargetFpsRanges);
     if (ret) {
-        return ret;
+        goto err_free_all;
     }
 
     /* CONTROL_AE_COMPENSATION_STEP */
@@ -185,7 +182,7 @@ int get_capabilities(uint32_t *size, uint8_t *capabilities)
                           sizeof(exposureCompensationRange),
                           (uint8_t *)exposureCompensationRange);
     if (ret) {
-        return ret;
+        goto err_free_all;
     }
 
     /* CONTROL_AE_COMPENSATION_STEP */
@@ -194,14 +191,14 @@ int get_capabilities(uint32_t *size, uint8_t *capabilities)
                           sizeof(exposureCompensationStep),
                           (uint8_t *)&exposureCompensationStep);
     if (ret) {
-        return ret;
+        goto err_free_all;
     }
 
     /* CONTROL_AF_AVAILABLE_MODES */
     ret = update_metadata(metadata_ptr, TYPE_BYTE, CONTROL_AF_AVAILABLE_MODES,
                           sizeof(availableAfModesBack), availableAfModesBack);
     if (ret) {
-        return ret;
+        goto err_free_all;
     }
 
     /* CONTROL_AVAILABLE_SCENE_MODES */
@@ -209,7 +206,7 @@ int get_capabilities(uint32_t *size, uint8_t *capabilities)
                           CONTROL_AVAILABLE_SCENE_MODES,
                           sizeof(availableSceneModes), availableSceneModes);
     if (ret) {
-        return ret;
+        goto err_free_all;
     }
 
     /* CONTROL_AVAILABLE_VIDEO_STABILIZATION_MODES */
@@ -217,21 +214,21 @@ int get_capabilities(uint32_t *size, uint8_t *capabilities)
                           CONTROL_AVAILABLE_VIDEO_STABILIZATION_MODES,
                           sizeof(availableVstabModes), availableVstabModes);
     if (ret) {
-        return ret;
+        goto err_free_all;
     }
 
     /* CONTROL_AWB_AVAILABLE_MODES */
     ret = update_metadata(metadata_ptr, TYPE_BYTE, CONTROL_AWB_AVAILABLE_MODES,
                           sizeof(availableAwbModes), availableAwbModes);
     if (ret) {
-        return ret;
+        goto err_free_all;
     }
 
     /* CONTROL_MAX_REGIONS */
     ret = update_metadata(metadata_ptr, TYPE_BYTE, CONTROL_MAX_REGIONS,
                           sizeof(max3aRegions), (uint8_t *)max3aRegions);
     if (ret) {
-        return ret;
+        goto err_free_all;
     }
 
     /* CONTROL_SCENE_MODES_OVERRIDES */
@@ -240,16 +237,16 @@ int get_capabilities(uint32_t *size, uint8_t *capabilities)
     ret = update_metadata(metadata_ptr, TYPE_BYTE, FLASH_INFO_AVAILABLE,
                           sizeof(flashAvailable), &flashAvailable);
     if (ret) {
-        return ret;
+        goto err_free_all;
     }
 
-    /* android.jpeg - JPEG_AVAILABLE_THUMBNAIL_SIZES */
+    /* JPEG_AVAILABLE_THUMBNAIL_SIZES */
     ret = update_metadata(metadata_ptr, TYPE_INT32,
                           JPEG_AVAILABLE_THUMBNAIL_SIZES,
                           sizeof(jpegThumbnailSizes),
                           (uint8_t *)jpegThumbnailSizes);
     if (ret) {
-        return ret;
+        goto err_free_all;
     }
 
     /* LENS_INFO_AVAILABLE_FOCAL_LENGTHS */
@@ -257,7 +254,7 @@ int get_capabilities(uint32_t *size, uint8_t *capabilities)
                           LENS_INFO_AVAILABLE_FOCAL_LENGTHS,
                           sizeof(focalLength), (uint8_t *)&focalLength);
     if (ret) {
-        return ret;
+        goto err_free_all;
     }
 
     /* REQUEST_MAX_NUM_OUTPUT_STREAMS */
@@ -266,7 +263,7 @@ int get_capabilities(uint32_t *size, uint8_t *capabilities)
                           sizeof(max_output_streams),
                           (uint8_t *)max_output_streams);
     if (ret) {
-        return ret;
+        goto err_free_all;
     }
 
     /* REQUEST_AVAILABLE_REQUEST_KEYS = 0x68 */
@@ -277,7 +274,7 @@ int get_capabilities(uint32_t *size, uint8_t *capabilities)
     ret = update_metadata(metadata_ptr, TYPE_INT32, SCALER_AVAILABLE_FORMATS,
                           sizeof(scalar_formats), (uint8_t *)scalar_formats);
     if (ret) {
-        return ret;
+        goto err_free_all;
     }
 
     /* SCALER_AVAILABLE_MAX_DIGITAL_ZOOM */
@@ -285,14 +282,14 @@ int get_capabilities(uint32_t *size, uint8_t *capabilities)
                           SCALER_AVAILABLE_MAX_DIGITAL_ZOOM,
                           sizeof(maxZoom), (uint8_t *)&maxZoom);
     if (ret) {
-        return ret;
+        goto err_free_all;
     }
 
     /* SENSOR_ORIENTATION */
     ret = update_metadata(metadata_ptr, TYPE_INT32, SENSOR_ORIENTATION,
                           sizeof(orientation), (uint8_t *)&orientation);
     if (ret) {
-        return ret;
+        goto err_free_all;
     }
 
     /* SENSOR_INFO_SENSITIVITY_RANGE */
@@ -301,7 +298,7 @@ int get_capabilities(uint32_t *size, uint8_t *capabilities)
                           sizeof(SensitivityRange),
                           (uint8_t *)SensitivityRange);
     if (ret) {
-        return ret;
+        goto err_free_all;
     }
 
     /* SENSOR_INFO_PHYSICAL_SIZE */
@@ -309,7 +306,7 @@ int get_capabilities(uint32_t *size, uint8_t *capabilities)
                           sizeof(sensorPhysicalSize),
                           (uint8_t *)sensorPhysicalSize);
     if (ret) {
-        return ret;
+        goto err_free_all;
     }
 
     /* SENSOR_INFO_PIXEL_ARRAY_SIZE */
@@ -317,7 +314,7 @@ int get_capabilities(uint32_t *size, uint8_t *capabilities)
                           SENSOR_INFO_PIXEL_ARRAY_SIZE,
                           sizeof(Resolution), (uint8_t *)Resolution);
     if (ret) {
-        return ret;
+        goto err_free_all;
     }
 
     /* STATISTICS_INFO_MAX_FACE_COUNT */
@@ -325,20 +322,20 @@ int get_capabilities(uint32_t *size, uint8_t *capabilities)
                           STATISTICS_INFO_MAX_FACE_COUNT,
                           sizeof(maxFaceCount), (uint8_t *)&maxFaceCount);
     if (ret) {
-        return ret;
+        goto err_free_all;
     }
 
     /* Do the Data Copy */
-    memcpy(cap, &metadata_ptr->header, sizeof(struct camera_metadata_header));
-    buffercount = sizeof(struct camera_metadata_header);
+    memcpy(cap, &metadata_ptr->header, sizeof(metadata_ptr->header));
+    buffercount = sizeof(metadata_ptr->header);
     metadata_ptr->header.entry_start = buffercount;
     cap += buffercount;
 
     for (index = 0; index < metadata_ptr->header.entry_count; index++) {
         memcpy(cap, &metadata_ptr->entries[index],
-               sizeof(struct camera_metadata_entry));
-        buffercount += sizeof(struct camera_metadata_entry);
-        cap += sizeof(struct camera_metadata_entry);
+               sizeof(metadata_ptr->entries[0]));
+        buffercount += sizeof(metadata_ptr->entries[0]);
+        cap += sizeof(metadata_ptr->entries[0]);
     }
 
     metadata_ptr->header.metadata_data_start = buffercount;
@@ -348,49 +345,37 @@ int get_capabilities(uint32_t *size, uint8_t *capabilities)
     buffercount += metadata_ptr->header.size;
     metadata_ptr->header.size = buffercount;
     *size = buffercount;
-    metadata_ptr->header.metadata_data_count = metadata_ptr->header.entry_count;
+    metadata_ptr->header.metadata_data_count =
+        metadata_ptr->header.entry_count;
 
     free(metadata_ptr->data);
     free(metadata_ptr->entries);
     free(metadata_ptr);
     return 0;
+
+err_free_all:
+    free(metadata_ptr->data);
+err_free_metadata:
+    free(metadata_ptr->entries);
+err_free_metadata_ptr:
+    free(metadata_ptr);
+    return -ENOMEM;
 }
 
 /**
- * @brief Camera sensor capture settings
+ * @brief Camera sensor capture result metadata
  * @param size buffer size
  * @param capabilities buffer address
  * @return zero for success or non-zero on any faillure
  */
-int get_capture_request_settings(uint8_t *capabilities)
+int get_capture_results_metadata(uint32_t *size, uint8_t *capabilities)
 {
     struct camera_metadata_package  *metadata_ptr;
-    uint8_t *cap, *size;
+    uint8_t *cap;
     int index = 0, buffercount = 0, ret;
 
-    const uint8_t aeAntibandingMode =
-        ANDROID_CONTROL_AE_ANTIBANDING_MODE_AUTO;
-    const int32_t aeExpCompensation = 0;
-    const uint8_t aeLock = ANDROID_CONTROL_AE_LOCK_OFF;
-    const uint8_t aeMode = ANDROID_CONTROL_AE_MODE_ON;
-    const int32_t controlRegions[5] = {0, 0, 640, 480, 1000};
-    const int32_t aeTargetFpsRange[2] = {10, 30};
-    uint8_t afMode = ANDROID_CONTROL_AF_MODE_AUTO;
-    const uint8_t awbLock = ANDROID_CONTROL_AWB_LOCK_OFF;
-    const uint8_t awbMode = ANDROID_CONTROL_AWB_MODE_AUTO;
-    uint8_t controlIntent = ANDROID_CONTROL_CAPTURE_INTENT_PREVIEW;
-    const uint8_t effectMode = ANDROID_CONTROL_EFFECT_MODE_OFF;
-    const uint8_t controlMode = ANDROID_CONTROL_MODE_AUTO;
-    const uint8_t sceneMode = ANDROID_CONTROL_SCENE_MODE_FACE_PRIORITY;
-    const uint8_t vstabMode =
-        ANDROID_CONTROL_VIDEO_STABILIZATION_MODE_OFF;
-    const uint8_t flashMode = ANDROID_FLASH_MODE_OFF;
-    const int32_t jpegOrientation = 0;
-    const uint8_t jpegQuality = 80;
-    const int32_t thumbnailSize[2] = {640, 480};
+    const float focalLength = 2.50f;
     const float focusDistance = 0;
-    const uint8_t faceDetectMode =
-        ANDROID_STATISTICS_FACE_DETECT_MODE_OFF;
 
     /* buffer initial */
     cap = capabilities;
@@ -402,192 +387,48 @@ int get_capture_request_settings(uint8_t *capabilities)
                                    sizeof(struct camera_metadata_entry));
     if (!metadata_ptr->entries) {
         free(metadata_ptr);
-        return -ENOMEM;
+        goto err_free_metadata_ptr;
     }
 
     metadata_ptr->data = zalloc(MAX_METADATA_NUMBER * MAX_METADATA_SIZE);
     if (!metadata_ptr->data ) {
-        free(metadata_ptr);
-        free(metadata_ptr->entries);
-        return -ENOMEM;
+        goto err_free_metadata;
     }
     metadata_ptr->header.version = ARA_METADATA_VERSION;
 
-    /* CONTROL_AE_ANTIBANDING_MODE */
-    ret = update_metadata(metadata_ptr, TYPE_BYTE, CONTROL_AE_ANTIBANDING_MODE,
-                          sizeof(aeAntibandingMode), &aeAntibandingMode);
-    if (ret) {
-        return ret;
-    }
+    /* LENS_FOCUS_RANGE */
+    /* SENSOR_TIMESTAMP */
+    /* STATISTICS_FACE_IDS */
+    /* STATISTICS_FACE_LANDMARKS */
+    /* STATISTICS_FACE_RECTANGLES */
+    /* STATISTICS_FACE_SCORES */
 
-    /* CONTROL_AE_EXPOSURE_COMPENSATION */
-    ret = update_metadata(metadata_ptr, TYPE_INT32,
-                          CONTROL_AE_EXPOSURE_COMPENSATION,
-                          sizeof(aeExpCompensation),
-                          (uint8_t *)&aeExpCompensation);
+    /* LENS_INFO_AVAILABLE_FOCAL_LENGTHS */
+    ret = update_metadata(metadata_ptr, TYPE_FLOAT,
+                          LENS_INFO_AVAILABLE_FOCAL_LENGTHS,
+                          sizeof(focalLength), (uint8_t *)&focalLength);
     if (ret) {
-        return ret;
-    }
-
-    /* CONTROL_AE_LOCK */
-    ret = update_metadata(metadata_ptr, TYPE_BYTE, CONTROL_AE_LOCK,
-                          sizeof(aeLock), &aeLock);
-    if (ret) {
-        return ret;
-    }
-
-    /* CONTROL_AE_MODE */
-    ret = update_metadata(metadata_ptr, TYPE_INT32, CONTROL_AE_MODE,
-                          sizeof(aeMode), &aeMode);
-    if (ret) {
-        return ret;
-    }
-
-    /* CONTROL_AE_REGIONS */
-    ret = update_metadata(metadata_ptr, TYPE_INT32, CONTROL_AE_REGIONS,
-                          sizeof(controlRegions), (uint8_t *)controlRegions);
-    if (ret) {
-        return ret;
-    }
-
-    /* CONTROL_AE_TARGET_FPS_RANGE */
-    ret = update_metadata(metadata_ptr, TYPE_INT32,
-                          CONTROL_AE_TARGET_FPS_RANGE,
-                          sizeof(aeTargetFpsRange),
-                          (uint8_t *)aeTargetFpsRange);
-    if (ret) {
-        return ret;
-    }
-
-    /* CONTROL_AE_PRECAPTURE_TRIGGER */
-
-    /* CONTROL_AF_MODE */
-    ret = update_metadata(metadata_ptr, TYPE_BYTE, CONTROL_AF_MODE,
-                          sizeof(afMode), &afMode);
-    if (ret) {
-        return ret;
-    }
-
-    /* CONTROL_AF_REGIONS */
-    ret = update_metadata(metadata_ptr, TYPE_INT32, CONTROL_AF_REGIONS,
-                          sizeof(controlRegions), (uint8_t *)controlRegions);
-    if (ret) {
-        return ret;
-    }
-
-    /* CONTROL_AWB_LOCK */
-    ret = update_metadata(metadata_ptr, TYPE_BYTE, CONTROL_AWB_LOCK,
-                          sizeof(awbLock), &awbLock);
-    if (ret) {
-        return ret;
-    }
-
-    /* CONTROL_AWB_MODE */
-    ret = update_metadata(metadata_ptr, TYPE_BYTE, CONTROL_AWB_MODE,
-                          sizeof(awbMode), &awbMode);
-    if (ret) {
-        return ret;
-    }
-
-    /* CONTROL_AWB_REGIONS */
-    ret = update_metadata(metadata_ptr, TYPE_INT32, CONTROL_AWB_REGIONS,
-                          sizeof(controlRegions), (uint8_t *)controlRegions);
-    if (ret) {
-        return ret;
-    }
-
-    /* CONTROL_CAPTURE_INTENT */
-    ret = update_metadata(metadata_ptr, TYPE_BYTE, CONTROL_CAPTURE_INTENT,
-                          sizeof(controlIntent), &controlIntent);
-    if (ret) {
-        return ret;
-    }
-
-    /* CONTROL_EFFECT_MODE */
-    ret = update_metadata(metadata_ptr, TYPE_BYTE, CONTROL_EFFECT_MODE,
-                          sizeof(effectMode), &effectMode);
-    if (ret) {
-        return ret;
-    }
-
-    /* CONTROL_MODE */
-    ret = update_metadata(metadata_ptr, TYPE_BYTE, CONTROL_MODE,
-                          sizeof(controlMode), &controlMode);
-    if (ret) {
-        return ret;
-    }
-
-    /* CONTROL_SCENE_MODE */
-    ret = update_metadata(metadata_ptr, TYPE_BYTE, CONTROL_SCENE_MODE,
-                          sizeof(sceneMode), &sceneMode);
-    if (ret) {
-        return ret;
-    }
-
-    /* CONTROL_VIDEO_STABILIZATION_MODE */
-    ret = update_metadata(metadata_ptr, TYPE_BYTE,
-                          CONTROL_VIDEO_STABILIZATION_MODE, sizeof(vstabMode),
-                          &vstabMode);
-    if (ret) {
-        return ret;
-    }
-
-    /* FLASH_MODE */
-    ret = update_metadata(metadata_ptr, TYPE_BYTE, FLASH_MODE,
-                          sizeof(flashMode), &flashMode);
-    if (ret) {
-        return ret;
-    }
-
-    /* JPEG_ORIENTATION */
-    ret = update_metadata(metadata_ptr, TYPE_INT32, JPEG_ORIENTATION,
-                          sizeof(jpegOrientation),
-                          (uint8_t *)&jpegOrientation);
-    if (ret) {
-        return ret;
-    }
-
-    /* JPEG_QUALITY */
-    ret = update_metadata(metadata_ptr, TYPE_BYTE, JPEG_QUALITY,
-                          sizeof(jpegQuality), &jpegQuality);
-    if (ret) {
-        return ret;
-    }
-
-    /* JPEG_THUMBNAIL_SIZE */
-    ret = update_metadata(metadata_ptr, TYPE_INT32, JPEG_THUMBNAIL_SIZE,
-                          sizeof(thumbnailSize), (uint8_t *)thumbnailSize);
-    if (ret) {
-        return ret;
+        goto err_free_all;
     }
 
     /* LENS_FOCUS_DISTANCE */
-    ret = update_metadata(metadata_ptr,TYPE_FLOAT, LENS_FOCUS_DISTANCE,
+    ret = update_metadata(metadata_ptr, TYPE_FLOAT, LENS_FOCUS_DISTANCE,
                           sizeof(focusDistance), (uint8_t *)&focusDistance);
     if (ret) {
-        return ret;
-    }
-
-    /* SCALER_CROP_REGION */
-
-    /* STATISTICS_FACE_DETECT_MODE */
-    ret = update_metadata(metadata_ptr, TYPE_BYTE, STATISTICS_FACE_DETECT_MODE,
-                          sizeof(faceDetectMode), &faceDetectMode);
-    if (ret) {
-        return ret;
+        goto err_free_all;
     }
 
     /* Do the Data Copy */
-    memcpy(cap, &metadata_ptr->header, sizeof(struct camera_metadata_header));
-    buffercount = sizeof(struct camera_metadata_header);
+    memcpy(cap, &metadata_ptr->header, sizeof(metadata_ptr->header));
+    buffercount = sizeof(metadata_ptr->header);
     metadata_ptr->header.entry_start = buffercount;
     cap += buffercount;
 
     for (index = 0; index < metadata_ptr->header.entry_count; index++) {
         memcpy(cap, &metadata_ptr->entries[index],
-               sizeof(struct camera_metadata_entry));
-        buffercount += sizeof(struct camera_metadata_entry);
-        cap += sizeof(struct camera_metadata_entry);
+               sizeof(metadata_ptr->entries[0]));
+        buffercount += sizeof(metadata_ptr->entries[0]);
+        cap += sizeof(metadata_ptr->entries[0]);
     }
 
     metadata_ptr->header.metadata_data_start = buffercount;
@@ -597,12 +438,21 @@ int get_capture_request_settings(uint8_t *capabilities)
     buffercount += metadata_ptr->header.size;
     metadata_ptr->header.size = buffercount;
     *size = buffercount;
-    metadata_ptr->header.metadata_data_count = metadata_ptr->header.entry_count;
+    metadata_ptr->header.metadata_data_count =
+        metadata_ptr->header.entry_count;
 
     free(metadata_ptr->data);
     free(metadata_ptr->entries);
     free(metadata_ptr);
     return 0;
+
+err_free_all:
+    free(metadata_ptr->data);
+err_free_metadata:
+    free(metadata_ptr->entries);
+err_free_metadata_ptr:
+    free(metadata_ptr);
+    return -ENOMEM;
 }
 
 /**
@@ -620,6 +470,7 @@ int update_metadata(struct camera_metadata_package *data, uint8_t type,
     int nEntry = 0;
 
     if (data->header.entry_count >= MAX_METADATA_NUMBER) {
+        printf("update_metadata no MEMORY\n");
         return -ENOMEM;
     }
     nEntry = data->header.entry_count;
